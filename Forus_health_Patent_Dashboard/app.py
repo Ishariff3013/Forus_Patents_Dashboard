@@ -13,9 +13,18 @@ st.set_page_config(
 )
 
 # ===============================
+# Base directory (folder where app.py lives)
+# ===============================
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+def p(filename):
+    """Return absolute path relative to app.py's directory."""
+    return os.path.join(BASE_DIR, filename)
+
+# ===============================
 # Load Patent Data
 # ===============================
-patent_file = "Patent_Data.xlsx"
+patent_file = p("Patent_Data.xlsx")
 xls = pd.ExcelFile(patent_file)
 df = pd.read_excel(xls, sheet_name="Patents_Data")
 
@@ -31,7 +40,7 @@ grant_rate = round((granted / total_patents) * 100, 1) if total_patents else 0
 # ===============================
 # Load Publications Data
 # ===============================
-pub_df = pd.read_excel("Publications.xlsx")
+pub_df = pd.read_excel(p("Publications.xlsx"))
 
 total_publications = len(pub_df)
 published = pub_df["Status"].str.contains("Published", case=False, na=False).sum()
@@ -45,7 +54,7 @@ with c1:
     st.title("📘 FH – Patents & Publications Dashboard")
     st.caption("Patents & Publications | Executive Dashboard")
 with c2:
-    logo_path = "forus-logo.png"
+    logo_path = p("forus-logo.png")
     if os.path.exists(logo_path):
         st.image(logo_path, width=120)
 
@@ -161,7 +170,7 @@ with col4:
 # ===============================
 st.subheader("Granted Patents – PDF Access")
 
-pdf_folder = "pdfs"
+pdf_folder = p("pdfs")
 
 def get_pdf_link(path, label):
     with open(path, "rb") as f:
